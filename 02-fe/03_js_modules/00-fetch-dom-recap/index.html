@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Fake Store</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-slate-600 text-gray-300 flex flex-col min-h-screen">
+    <nav class="flex justify-end bg-slate-800 py-2 px-8 text-2xl mb-6">
+      <ul class="flex gap-6">
+        <li class="p-2 rounded-lg hover:bg-slate-600">
+          <a href="index.html">Home</a>
+        </li>
+        <li class="p-2 rounded-lg hover:bg-slate-600">
+          <a href="#">Cart</a>
+        </li>
+      </ul>
+    </nav>
+    <header class="text-center">
+      <h1 class="text-6xl mb-6">My First Fake Store!</h1>
+    </header>
+    <main class="flex-grow">
+      <section class="p-4">
+        <h2 class="text-4xl">New Arrivals</h2>
+        <div id="new-arrivals" class="flex justify-center flex-wrap gap-4 p-4 w-full">
+          <div class="shadow-xl hover:shadow-2xl hover:cursor-pointer w-96 rounded-md m-auto flex-flex-col">
+            <figure class="rounded-t-md overflow-hidden w-full h-96">
+              <img
+                class="w-full h-full"
+                src="https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
+                alt="Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops"
+              />
+            </figure>
+            <div class="flex flex-col p-6 pt-2 rounded-b-md bg-slate-800 h-44">
+              <h2 class="text-2xl border-b-2 mb-4 border-b-gray-400">
+                Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops
+              </h2>
+              <p class="text-xl">$109.95</p>
+              <div class="flex justify-end items-baseline gap-4">
+                <a class="hover:text-purple-500 underline" href="#">men's clothing</a>
+                <button class="bg-green-600 hover:bg-green-700 p-2 rounded-lg font-bold">Add to cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="flex justify-center bg-slate-800 py-4 text-2xl w-full">
+      © Copyright Please Don't Steal My Stuff, no rights reserved
+    </footer>
+    <script src="index.js"></script>
+  </body>
+</html>

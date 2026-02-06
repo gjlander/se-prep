@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=
+    , initial-scale=1.0"
+        />
+        <title>The Duck Pond</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body class="p-4">
+        <header class="text-center">
+            <h1 class="text-6xl mb-4">The Duck Pond</h1>
+            <button id="summon" class="btn btn-primary">
+                Summon the ducks!
+            </button>
+        </header>
+        <main>
+            <section
+                id="pond"
+                class="flex justify-center flex-wrap gap-4 p-4 w-full"
+            >
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://cdn11.bigcommerce.com/s-nf2x4/images/stencil/1280x1280/products/430/7841/Knight-Rubber-Duck-Yarto-2__93062.1576270637.jpg?c=2"
+                            alt="Sir Quacks-a-lot"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Sir Quacks-a-lot</h2>
+                        <p>I will slay your bugs!</p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://www.veniceduckstore.it/cdn/shop/products/Captain-Quack-Rubber-Duck-slant.jpg"
+                            alt="Captain Quack Sparrow"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Captain Quack Sparrow</h2>
+                        <p>
+                            You'll always remember this as the day you almost
+                            squeezed Captain Quack Sparrow.
+                        </p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://i.ebayimg.com/images/g/vToAAOSwr6hdW8L8/s-l1600.jpg"
+                            alt="Ruder Duck"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Ruder Duck</h2>
+                        <p>#@*% off! Debug your own code!</p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://www.duckshop.de/media/image/3c/ce/25/Black_Star_Badeente_58495616_4_600x600.jpg"
+                            alt="Darth Quacker"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Darth Quacker</h2>
+                        <p>No, I am your debugger!</p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://i5.walmartimages.com/seo/Spidy-Super-Hero-Rubber-Duck_a42dbd68-e8cd-41f2-ac6d-c812a3a00339.bc3415f3b98088ac58eaeda1f06c10c9.png?odnHeight=640&odnWidth=640&odnBg=FFFFFF"
+                            alt="Spider-Duck"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Spider-Duck</h2>
+                        <p>Does whatever a Spider-Duck can!</p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://images.handyimprints.com.au/product/nerd-rubber-duck.jpg"
+                            alt="Sr Developer Duckbert"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Sr Developer Duckbert</h2>
+                        <p>Come to me with your BIG bugs!</p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://m.media-amazon.com/images/I/61iqP4VFsEL.__AC_SX300_SY300_QL70_ML2_.jpg"
+                            alt="Quacker"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Quacker</h2>
+                        <p>Why so serious?</p>
+                    </div>
+                </div>
+                <div class="card card-compact bg-base-100 w-96 shadow-xl">
+                    <figure>
+                        <img
+                            src="https://duckycity.com/cdn/shop/products/SG-REYTD-JCNYO_1024x1024_clipped_rev_1-min_540x.jpeg?v=1505504539"
+                            alt="Mad Quacker"
+                        />
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">Mad Quacker</h2>
+                        <p>
+                            Be careful, or I might just make your bugs into
+                            SUPER bugs!
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="flex flex-col items-center gap-4 border-2 rounded-lg p-4 mx-8"
+            >
+                <h2 class="text-4xl">Add a new duck to the pond!</h2>
+                <form id="add-form" class="flex flex-col gap-4 w-3/4">
+                    <input
+                        id="name"
+                        type="text"
+                        placeholder="What is your duck's name?"
+                        class="input input-bordered w-full"
+                        required
+                    />
+                    <input
+                        id="img-url"
+                        type="url"
+                        placeholder="What does your duck look like?"
+                        class="input input-bordered w-full"
+                        required
+                    />
+                    <input
+                        id="quote"
+                        type="text"
+                        placeholder="What does your duck say?"
+                        class="input input-bordered w-full"
+                    />
+                    <button type="submit" class="btn btn-secondary">
+                        Add duck
+                    </button>
+                </form>
+            </section>
+        </main>
+        <script src="index.js" type="module"></script>
+    </body>
+</html>

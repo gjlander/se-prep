@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="rubber-duck-icon.svg" type="image/svg" />
+    <title>The Duck Pond</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-600 text-gray-300 flex flex-col min-h-screen">
+    <nav>
+      <ul class="flex justify-end gap-6 bg-slate-800 py-2 px-8 text-2xl mb-6">
+        <li class="p-2 rounded-lg hover:bg-slate-600">
+          <a href="../index.html">Home</a>
+        </li>
+        <li class="p-2 rounded-lg hover:bg-slate-600">
+          <a href="myPond.html">My Pond</a>
+        </li>
+      </ul>
+    </nav>
+    <main class="flex-grow">
+      <header class="text-center">
+        <h1 class="text-6xl mb-6">My Personal Pond</h1>
+      </header>
+      <section class="flex flex-col items-center gap-4 border-2 rounded-lg p-4 mx-8">
+        <h2 class="text-4xl">Add a new duck to my pond!</h2>
+        <form id="my-pond-add-form" class="flex flex-col gap-4 w-3/4">
+          <label class="w-full flex gap-2 items-baseline">
+            <span class="text-xl">Name:</span>
+            <input
+              id="name"
+              type="text"
+              placeholder="What is your duck's name?"
+              class="bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 flex-grow"
+            />
+          </label>
+          <label class="w-full flex gap-2 items-baseline">
+            <span class="text-xl">Image:</span>
+            <input
+              id="img-url"
+              type="url"
+              placeholder="What does your duck look like?"
+              class="bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full"
+            />
+          </label>
+          <label class="w-full flex gap-2 items-baseline">
+            <span class="text-xl">Quote:</span>
+            <input
+              id="quote"
+              type="text"
+              placeholder="What does your duck say?"
+              class="bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full"
+            />
+          </label>
+          <button type="submit" class="bg-green-600 p-2 rounded-lg font-bold">Add duck</button>
+        </form>
+      </section>
+      <section id="my-pond" class="flex justify-center flex-wrap gap-4 p-4 w-full"></section>
+    </main>
+    <footer class="flex justify-center bg-slate-800 py-4 text-2xl w-full">
+      © Copyright Ducks on Ducks on Ducks, all right reserved
+    </footer>
+    <script src="myPond.js"></script>
+  </body>
+</html>

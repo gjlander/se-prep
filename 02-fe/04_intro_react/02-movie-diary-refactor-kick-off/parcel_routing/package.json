@@ -1,0 +1,20 @@
+{
+    "name": "parcel-movie-diary",
+    "source": [
+        "index.html",
+        "./src/page.html"
+    ],
+    "scripts": {
+        "dev": "parcel",
+        "build": "parcel build"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.20",
+        "parcel": "^2.13.3",
+        "postcss": "^8.4.47",
+        "tailwindcss": "^3.4.13"
+    },
+    "dependencies": {
+        "leaflet": "^1.9.4"
+    }
+}

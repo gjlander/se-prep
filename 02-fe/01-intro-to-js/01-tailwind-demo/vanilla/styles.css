@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-start {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  p {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+    color: #fff;
+  }
+}
+
+.abstract-logo {
+  height: 2rem;
+}
+
+.hero {
+  background-color: #dadbf1;
+  height: 33vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  h2 {
+    font-size: 4rem;
+  }
+  input {
+    padding: 0.4rem;
+    width: 50%;
+  }
+}
+
+/* .hero h2 {
+    font-size: 4rem;
+} */
+
+#services {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  padding: 5rem;
+}
+
+.service {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  img {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.service-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  a {
+    color: #4c5fd5;
+  }
+}
+
+footer {
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 33vh;
+  h3 {
+    font-size: 1.5rem;
+  }
+  ul {
+    list-style: none;
+  }
+}
+
+.footer-end {
+  align-self: flex-end;
+}
