@@ -17,9 +17,9 @@
 ## Installing EF Core
 
 - Since this repo is using .NET 9, we can add the version to each package
-  `dotnet add package Microsoft.EntityFrameworkCore --version 9.0.10`
-  `dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 9.0.10`
-  `dotnet add package Microsoft.EntityFrameworkCore.Design --version 9.0.10`
+  - `dotnet add package Microsoft.EntityFrameworkCore --version 9.0.10`
+  - `dotnet add package Microsoft.EntityFrameworkCore.Sqlite --version 9.0.10`
+  - `dotnet add package Microsoft.EntityFrameworkCore.Design --version 9.0.10`
 
 ## Creating the DbContext
 
