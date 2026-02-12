@@ -87,7 +87,7 @@
 - Based on what we see here, we should end up with a `.env.development.local` file that looks something like this (using some default values from Zod)
 
 ```
-MONGO_URI=mongodb+srv://dbUser:verysecurepassword@express.93nc620.mongodb.net/
+MONGO_URI=<mongo_uri>
 DB_NAME=travel-journal
 ACCESS_JWT_SECRET=ce8dbacbb0459ba342690a48332595592e34203c1aa7c676faac43853ccac642
 CLIENT_BASE_URL=http://localhost:5173
@@ -151,7 +151,6 @@ export default User;
 ### Register
 
 - In the past this would be our `createUser` endpoint. Without taking into consideration the additional logic we'll need for authenticating, what needs to happen when we create a new user?
-
   - check if the email is registered (exists is faster than `findOne` since it only returns the \_id)
 
 ```ts
@@ -530,22 +529,18 @@ export const register: RequestHandler<{}, TokenResBody, RegisterDTO> = async (
 ) => {};
 ```
 
-- We can also create a `userSchema` to make `create` generic
+- We can also create create a type for our user creation
+  - To make clear the separation from runtime validation and type safety checks, I've refactored this to only use Zod schemas for things we are using Zod for runtime validation, and TS's utilities for type checks
 
 ```ts
-export const userSchema = registerSchema.omit({ confirmPassword: true });
-```
+type UserDTO = Omit<RegisterDTO, 'confirmPassword'>;
 
-```ts
-type UserDTO = z.infer<typeof userSchema>;
-// other stuff...
-
-const user = await User.create<UserDTO>({
+const user = await User.create({
 	firstName,
 	lastName,
 	email,
 	password: hashedPW
-});
+} satisfies UserDTO);
 ```
 
 - login
@@ -558,30 +553,27 @@ export const login: RequestHandler<{}, TokenResBody, LoginDTO> = async (
 ```
 
 - me
-- Make a schema for the user profile
+- Make a type for the user profile
 
 ```ts
-export const userProfileSchema = z.object({
-	...userSchema.omit({ password: true }).shape,
-	_id: z.instanceof(Types.ObjectId),
-	roles: z.array(z.string()),
-	createdAt: z.date(),
-	__v: z.int().nonnegative()
-});
+type UserProfile = Omit<UserDTO, 'password'> & {
+	_id: InstanceType<typeof Types.ObjectId>;
+	roles: string[];
+	createdAt: Date;
+	__v: number;
+};
 ```
 
-- Infer the type and create a type intersection
+- Union type for the response body
 
 ```ts
-type UserProfile = { user: z.infer<typeof userProfileSchema> };
-type MeResBody = SuccessResBody & UserProfile;
+type MeResBody = SuccessResBody & { user: UserProfile };
 export const me: RequestHandler<{}, MeResBody> = async (req, res, next) => {};
 ```
 
 ## Let's move over to the Travel Journal API to look at how we can implement the `authenticate` middleware
 
 - Currently anyone can create a post, and anyone can edit any post (demo it)
-
   - Currently we're copy/pasting the author, but when we connect this to a frontend, that will come from the user profile
 
 - In order for populate to work, we need to make the author a Object Id and we need to make a User model. It's our job to make sure the User model here matches the one in our Auth Server. The only change we'll make is to not select the password
@@ -682,7 +674,6 @@ export default errorHandler;
 - We'll need to install cookie-parser and jsonwebtoken
   - `npm i  jsonwebtoken`
 - And their types packages for dev (we can also delete dotenv)
-
   - `npm i -D  @types/jsonwebtoken`
 
 - import our type and jwt

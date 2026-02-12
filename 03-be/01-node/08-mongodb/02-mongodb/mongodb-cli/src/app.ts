@@ -1,6 +1,6 @@
-import { db } from '#db';
 import { Command } from 'commander';
 import { ObjectId } from 'mongodb';
+import { db } from '#db';
 
 const program = new Command();
 program
@@ -44,7 +44,7 @@ program
 	.command('get')
 	.description('Get product by ID')
 	.argument('<id>', 'Product ID')
-	.action(async id => {
+	.action(async (id) => {
 		console.log(
 			'CLI application was called with get command with argument:',
 			id
@@ -60,7 +60,7 @@ program
 	.command('search')
 	.description('Search products by tag')
 	.argument('<tag>', 'Product tag')
-	.action(async tag => {
+	.action(async (tag) => {
 		console.log(
 			'CLI application was called with search command with argument:',
 			tag
@@ -94,7 +94,7 @@ program
 	.command('delete')
 	.description('Delete product by ID')
 	.argument('<id>', 'Product ID')
-	.action(async id => {
+	.action(async (id) => {
 		console.log(
 			'CLI application was called with delete command with argument:',
 			id

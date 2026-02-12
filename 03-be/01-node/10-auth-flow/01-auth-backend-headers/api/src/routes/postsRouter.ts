@@ -2,12 +2,13 @@ import { Router } from 'express';
 import { validateZod } from '#middlewares';
 import { createPost, deletePost, getAllPosts, getSinglePost, updatePost } from '#controllers';
 import { postSchema } from '#schemas';
-import { authenticate, hasRole } from '#middlewares';
+import { authenticate, hasRole, validateObjectId } from '#middlewares';
 
 const postsRouter = Router();
 
 postsRouter.route('/').get(getAllPosts).post(authenticate, hasRole('user'), validateZod(postSchema), createPost);
 
+postsRouter.use('/:id', validateObjectId);
 postsRouter
   .route('/:id')
   .get(getSinglePost)

@@ -1,9 +1,19 @@
 import { type ErrorRequestHandler } from 'express';
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-	process.env.NODE_ENV !== 'development' &&
-		console.error(`\x1b[31m${err.stack}\x1b[0m`);
-	res.status(err.cause || 500).json({ message: err.message });
+	process.env.NODE_ENV !== 'production' &&
+		console.log(`\x1b[31m${err.stack}\x1b[0m`);
+
+	let errorMessage = 'Internal server error';
+	let statusCode = 500;
+
+	if (err instanceof Error) {
+		if (err.cause && typeof err.cause === 'object' && 'status' in err.cause) {
+			statusCode = err.cause.status as number;
+		}
+		errorMessage = err.message;
+	}
+	res.status(statusCode).json({ error: errorMessage });
 };
 
 export default errorHandler;

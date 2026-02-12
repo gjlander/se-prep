@@ -1,15 +1,12 @@
-import { Types } from 'mongoose';
 import { z } from 'zod/v4';
 
 const emailError = 'Please provide a valid email address.';
-const emailSchema = z.string({ error: emailError }).trim().email({ error: emailError });
+const emailSchema = z.email({ error: emailError }).trim();
 
 const basePasswordSchema = z
   .string({ error: 'Password must be a string' })
   .min(12, { error: 'Password must be at least 12 characters.' })
   .max(512, { error: 'The length of this Password is excessive.' });
-
-const serviceSchema = z.string().max(128).optional();
 
 export const registerSchema = z
   .object(
@@ -37,14 +34,6 @@ export const loginSchema = z.object({
 });
 
 export const userSchema = registerSchema.omit({ confirmPassword: true });
-
-export const userProfileSchema = z.object({
-  ...userSchema.omit({ password: true }).shape,
-  _id: z.instanceof(Types.ObjectId),
-  roles: z.array(z.string()),
-  createdAt: z.date(),
-  __v: z.int().nonnegative()
-});
 
 export const refreshTokenSchema = z.object({
   refreshToken: z.string().min(1)

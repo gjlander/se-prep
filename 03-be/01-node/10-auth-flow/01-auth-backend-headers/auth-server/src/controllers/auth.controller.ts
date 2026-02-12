@@ -3,26 +3,26 @@ import bcrypt from 'bcrypt';
 import type { RequestHandler } from 'express';
 import { SALT_ROUNDS, ACCESS_JWT_SECRET } from '#config';
 import { User, RefreshToken } from '#models';
-import { createTokens, setAuthCookies } from '#utils';
+import { createTokens } from '#utils';
 import type { z } from 'zod/v4';
-import type {
-  registerSchema,
-  loginSchema,
-  userSchema,
-  userProfileSchema,
-  refreshTokenSchema
-} from '#schemas';
+import type { registerSchema, loginSchema, userSchema, refreshTokenSchema } from '#schemas';
+import type { Types } from 'mongoose';
 
 type RegisterDTO = z.infer<typeof registerSchema>;
 type LoginDTO = z.infer<typeof loginSchema>;
-type UserDTO = z.infer<typeof userSchema>;
 type RefreshTokenDTO = z.infer<typeof refreshTokenSchema>;
 
+type UserDTO = Omit<RegisterDTO, 'confirmPassword'>;
 type SuccessResBody = {
   message: string;
 };
-type UserProfile = { user: z.infer<typeof userProfileSchema> };
-type MeResBody = SuccessResBody & UserProfile;
+type UserProfile = Omit<UserDTO, 'password'> & {
+  _id: InstanceType<typeof Types.ObjectId>;
+  roles: string[];
+  createdAt: Date;
+  __v: number;
+};
+type MeResBody = SuccessResBody & { user: UserProfile };
 type TokenResBody = SuccessResBody & { accessToken: string; refreshToken: string };
 
 export const register: RequestHandler<{}, TokenResBody, RegisterDTO> = async (req, res) => {
@@ -38,7 +38,12 @@ export const register: RequestHandler<{}, TokenResBody, RegisterDTO> = async (re
   const hashedPW = await bcrypt.hash(password, salt);
 
   // create user in DB with create method
-  const user = await User.create<UserDTO>({ firstName, lastName, email, password: hashedPW });
+  const user = await User.create({
+    firstName,
+    lastName,
+    email,
+    password: hashedPW
+  } satisfies UserDTO);
 
   const [refreshToken, accessToken] = await createTokens(user);
 
