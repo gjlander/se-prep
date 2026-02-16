@@ -11,8 +11,7 @@
 ## Prompt Engineering
 
 - We'll cover structured responses in more detail soon, but we can use Zod (here it is again!) to make a schema to provide a detailed and reliable structured response
-  - Note that the OpenAI SDK relies on Zod v3, so when installing, must use `npm i zod@3`
-  - This means our types and Zod middleware will look slightly different than we're used to (another potential benefit of a microservices architecture)
+  - The OpenAI SDK only recently became compatible with Zod v4, so may still have some bugs
 
 ### Prompting methods
 
@@ -22,16 +21,15 @@
 
 ### `package.json`
 
-- Just had to add the OpenAI SDK library, and make sure to use Zod v3
+- Just had to add the OpenAI SDK library
 
 ### `app.ts`
 
-- Same basic setup as always, here we have our `completionsRouter`
+- Same basic setup as always, here we have our `completionRoutes`
 
-### `completionsRouter.ts`
+### `completionRoutes.ts`
 
-- We have our 2 `POST` requests, and a `GET` requests
-  - `POST` requests have Zod validation
+- We have our 1 `POST` request with Zod validation
 
 ## Chat controllers
 
@@ -50,7 +48,7 @@ const messages: ChatCompletionMessageParam[] = [
 ];
 ```
 
-### `createSimpleChatCompletion`
+### `createSimpleChat`
 
 - We destructure the prompt, as always
 
@@ -78,7 +76,7 @@ messages.push({ role: 'user', content: prompt });
 
 ```ts
 const completion = await client.chat.completions.create({
-	model: process.env.AI_MODEL || 'gemini-2.0-flash',
+	model: process.env.AI_MODEL || 'gemini-2.5-flash',
 	messages
 });
 ```
@@ -102,7 +100,9 @@ res.json({ completion: completionText });
 
 ### Let's play around with this endpoint for a bit
 
-## `createChatCompletion`
+#### This chat doesn't have persistence though, that's where you come in.
+
+<!-- ## `createChatCompletion`
 
 - Now we're moving from memory storage to an actual database
 - We destructure `chatId` now as well
@@ -188,4 +188,4 @@ res.json({ completion: completionText, chatId: currentChat._id.toString() });
 
 - Go over README and starter repo, ask for questions
 - Go to DaisyUI docs
-- Run server and show current version
+- Run server and show current version -->

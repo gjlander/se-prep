@@ -16,33 +16,25 @@
 
 ## Exercise
 
-- AI Chatbot
+- Manage chat history in DB
 
 ## Key takeaways
 
 - Simple server with OpenAI SDK chat completions (mention of newer responses)
-- structured output
+- Managing chat history in DB
 
-# Day 2 - Local Setup & Prompt Chaining & Streaming
+# Day 2 - Local Setup & Chatbot
 
 - NODE_ENV to `development`
 - ollama list to see models
 - open developer GUI for LM Studio, run server
-
-## Lecture
-
-- Demo downloading LLM and how to run
-- Introduce streaming
-- Add logic to handle it in backend
-- Introduce logic to handle response in frontend
+- Local LLM setup optional
 
 ## Exercise
 
-- Use ai-simple-server w/ local LLM & streaming
-- Add streaming to Chatbot
-- Prompt tutorial?
+- ChatBot
 
-# Day 3 - Tool Calling
+# Day 3 - Prompt Chaining & Tool Calling
 
 - instructions after Final response not clear in lecture article
 - Exercise too open ended
@@ -61,26 +53,23 @@
 
 - add Posts written by user to context with Tool calling (open ended exercise to specific)
 
-# Day 4 - Travel Journal Integration
+# Day 4 - MCP
+
+- absolute path issue with Git
+- query / command not working
+
+# Day 5 - Agentic AI
+
+# Day 6 - Travel Journal Integration
 
 ## Lecture
 
-- add ai-simple-serve to Microservices
+- add ai-simple-server to Microservices
 - Add chatbot to SPA
 - Update system instruction (refer to Gemini docs on how)
 - Demo that initial basic integration
 - Add context for signed in users with caching
 
-- Structured output?
-- Adding context?
-
 ## Exercise
 
 - Add AI Chatbot to Travel Journal
-
-# Day 5 (4) - MCP
-
-- absolute path issue with Git
-- query / command not working
-
-# Day 6 (5) - Agentic AI
