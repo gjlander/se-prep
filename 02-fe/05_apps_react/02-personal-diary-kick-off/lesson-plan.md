@@ -24,7 +24,7 @@
 ### Installation and setup
 
 - We first need to install it `npm i react-toastify`
-- With routing, we add this to our main layout, but for the project, you can add the `ToastContainer` to `App.jsx`
+- add the `ToastContainer` to `App.jsx`
 
 ```js
 import { Outlet } from 'react-router';
@@ -32,16 +32,16 @@ import { ToastContainer } from 'react-toastify';
 import { Navbar, Footer } from '../components';
 
 const MainLayout = () => {
-  return (
-    <div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
-      <Navbar />
-      <main className='flex-grow flex flex-col justify-between py-4'>
-        <Outlet />
-      </main>
-      <Footer />
-      <ToastContainer />
-    </div>
-  );
+	return (
+		<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
+			<Navbar />
+			<main className='flex-grow flex flex-col justify-between py-4'>
+				<Outlet />
+			</main>
+			<Footer />
+			<ToastContainer />
+		</div>
+	);
 };
 
 export default MainLayout;
@@ -53,30 +53,13 @@ export default MainLayout;
 ```js
 import { toast } from 'react-toastify';
 // rest of DuckForm...
-const handleSubmit = e => {
-  e.preventDefault();
-  try {
-    if (!form.name.trim()) {
-      throw new Error('Name is required');
-    }
-    if (!form.imgUrl.trim()) {
-      throw new Error('Image URL is required');
-    }
-    if (!form.quote.trim()) {
-      throw new Error('Quote is required');
-    }
-    const newDuck = { ...form, _id: crypto.randomUUID() };
-    console.log(newDuck);
-
-    setDucks(prev => [...prev, newDuck]);
-    setForm({
-      name: '',
-      imgUrl: '',
-      quote: ''
-    });
-  } catch (error) {
-    toast.error(error.message);
-  }
+const handleSubmit = (e) => {
+	e.preventDefault();
+	try {
+		// form logic...
+	} catch (error) {
+		toast.error(error.message);
+	}
 };
 ```
 
@@ -93,6 +76,8 @@ const [errors, setErrors] = useState({});
 
 - Let's make a `validateDuckForm` utility function we can use to extract some of this logic
 
+`utils/validateForm.js`
+
 ```js
 const validateDuckForm = ({ name, imgUrl, quote }) => {};
 ```
@@ -101,41 +86,41 @@ const validateDuckForm = ({ name, imgUrl, quote }) => {};
 
 ```js
 const validateDuckForm = ({ name, imgUrl, quote }) => {
-  const newErrors = {};
-  if (!name.trim()) {
-    newErrors.name = 'Name is required';
-  }
-  if (!imgUrl.trim()) {
-    newErrors.imgUrl = 'Image URL is required';
-  }
-  if (!quote.trim()) {
-    newErrors.quote = 'Quote is required';
-  }
-  return newErrors;
+	const newErrors = {};
+	if (!name.trim()) {
+		newErrors.name = 'Name is required';
+	}
+	if (!imgUrl.trim()) {
+		newErrors.imgUrl = 'Image URL is required';
+	}
+	if (!quote.trim()) {
+		newErrors.quote = 'Quote is required';
+	}
+	return newErrors;
 };
 ```
 
 - We can then call this function in our submit handler, and for new log the results
 
 ```js
-const handleSubmit = e => {
-  e.preventDefault();
-  try {
-    const validationErrors = validateDuckForm(form);
-    console.log(validationErrors);
-    return;
-    const newDuck = { ...form, _id: crypto.randomUUID() };
-    console.log(newDuck);
-    toast.success("There's a new duck in your pond!");
-    setDucks(prev => [...prev, newDuck]);
-    setForm({
-      name: '',
-      imgUrl: '',
-      quote: ''
-    });
-  } catch (error) {
-    toast.error(error.message);
-  }
+const handleSubmit = (e) => {
+	e.preventDefault();
+	try {
+		const validationErrors = validateDuckForm(form);
+		console.log(validationErrors);
+		return;
+		const newDuck = { ...form, _id: crypto.randomUUID() };
+		console.log(newDuck);
+		toast.success("There's a new duck in your pond!");
+		setDucks((prev) => [...prev, newDuck]);
+		setForm({
+			name: '',
+			imgUrl: '',
+			quote: ''
+		});
+	} catch (error) {
+		toast.error(error.message);
+	}
 };
 ```
 
@@ -144,7 +129,8 @@ const handleSubmit = e => {
 - We can use `Object.keys().length` and throw an error with a more generic message if we have any errors
 
 ```js
-if (Object.keys(validationErrors).length !== 0) throw new Error('Missing required fields');
+if (Object.keys(validationErrors).length !== 0)
+	throw new Error('Missing required fields');
 ```
 
 ### Updating our UI based on the errors state
@@ -153,56 +139,63 @@ if (Object.keys(validationErrors).length !== 0) throw new Error('Missing require
 
 ```js
 return (
-  <section onSubmit={handleSubmit} className='flex flex-col items-center gap-4 border-2 rounded-lg p-4 mx-8'>
-    <h2 className='text-4xl'>Add a new duck to my pond!</h2>
-    <form id='add-form' className='flex flex-col gap-6 w-3/4'>
-      <label className='w-full flex gap-2 items-baseline'>
-        <span className='text-xl'>Name:</span>
-        <div className='w-full'>
-          <input
-            onChange={handleChange}
-            value={form.name}
-            name='name'
-            type='text'
-            placeholder="What is your duck's name?"
-            className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
-          />
-          {errors.name && <p className='text-red-500 text-sm'>{errors.name}</p>}
-        </div>
-      </label>
-      <label className='w-full flex gap-2 items-baseline'>
-        <span className='text-xl'>Image:</span>
-        <div className='w-full'>
-          <input
-            onChange={handleChange}
-            value={form.imgUrl}
-            name='imgUrl'
-            // type='url'
-            placeholder='What does your duck look like?'
-            className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
-          />
-          {errors.imgUrl && <p className='text-red-500 text-sm'>{errors.imgUrl}</p>}
-        </div>
-      </label>
-      <label className='w-full flex gap-2 items-baseline'>
-        <span className='text-xl'>Quote:</span>
-        <div className='w-full'>
-          <input
-            onChange={handleChange}
-            value={form.quote}
-            name='quote'
-            type='text'
-            placeholder='What does your duck say?'
-            className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
-          />
-          {errors.quote && <p className='text-red-500 text-sm'>{errors.quote}</p>}
-        </div>
-      </label>
-      <button type='submit' className='bg-green-600 p-2 rounded-lg font-bold'>
-        Add duck
-      </button>
-    </form>
-  </section>
+	<section
+		onSubmit={handleSubmit}
+		className='flex flex-col items-center gap-4 border-2 rounded-lg p-4 mx-8'
+	>
+		<h2 className='text-4xl'>Add a new duck to my pond!</h2>
+		<form id='add-form' className='flex flex-col gap-6 w-3/4'>
+			<label className='w-full flex gap-2 items-baseline'>
+				<span className='text-xl'>Name:</span>
+				<div className='w-full'>
+					<input
+						onChange={handleChange}
+						value={form.name}
+						name='name'
+						type='text'
+						placeholder="What is your duck's name?"
+						className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
+					/>
+					{errors.name && <p className='text-red-500 text-sm'>{errors.name}</p>}
+				</div>
+			</label>
+			<label className='w-full flex gap-2 items-baseline'>
+				<span className='text-xl'>Image:</span>
+				<div className='w-full'>
+					<input
+						onChange={handleChange}
+						value={form.imgUrl}
+						name='imgUrl'
+						// type='url'
+						placeholder='What does your duck look like?'
+						className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
+					/>
+					{errors.imgUrl && (
+						<p className='text-red-500 text-sm'>{errors.imgUrl}</p>
+					)}
+				</div>
+			</label>
+			<label className='w-full flex gap-2 items-baseline'>
+				<span className='text-xl'>Quote:</span>
+				<div className='w-full'>
+					<input
+						onChange={handleChange}
+						value={form.quote}
+						name='quote'
+						type='text'
+						placeholder='What does your duck say?'
+						className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
+					/>
+					{errors.quote && (
+						<p className='text-red-500 text-sm'>{errors.quote}</p>
+					)}
+				</div>
+			</label>
+			<button type='submit' className='bg-green-600 p-2 rounded-lg font-bold'>
+				Add duck
+			</button>
+		</form>
+	</section>
 );
 ```
 
@@ -212,14 +205,14 @@ return (
 - There are several options, but we'll use the `URL` constructor, which will throw an error if the argument passed isn't a proper url
 
 ```js
-const isValidUrl = testUrl => {
-  try {
-    new URL(testUrl);
-    return true;
-    // eslint-disable-next-line no-unused-vars
-  } catch (error) {
-    return false;
-  }
+const isValidUrl = (testUrl) => {
+	try {
+		new URL(testUrl);
+		return true;
+		// eslint-disable-next-line no-unused-vars
+	} catch (error) {
+		return false;
+	}
 };
 ```
 
@@ -227,63 +220,20 @@ const isValidUrl = testUrl => {
 
 ```js
 const validateDuckForm = ({ name, imgUrl, quote }) => {
-  const newErrors = {};
-  if (!name.trim()) {
-    newErrors.name = 'Name is required';
-  }
-  if (!imgUrl.trim()) {
-    newErrors.imgUrl = 'Image URL is required';
-  } else if (!isValidUrl(imgUrl)) {
-    newErrors.imgUrl = 'Image must be a valid URL';
-  }
-  if (!quote.trim()) {
-    newErrors.quote = 'Quote is required';
-  }
-  return newErrors;
+	const newErrors = {};
+	if (!name.trim()) {
+		newErrors.name = 'Name is required';
+	}
+	if (!imgUrl.trim()) {
+		newErrors.imgUrl = 'Image URL is required';
+	} else if (!isValidUrl(imgUrl)) {
+		newErrors.imgUrl = 'Image must be a valid URL';
+	}
+	if (!quote.trim()) {
+		newErrors.quote = 'Quote is required';
+	}
+	return newErrors;
 };
 ```
-
-- To clean up our code, we can move these into a `utils` folder
-  - `src/utils/index.js`
-
-```js
-const isValidUrl = testUrl => {
-  try {
-    new URL(testUrl);
-    return true;
-    // eslint-disable-next-line no-unused-vars
-  } catch (error) {
-    return false;
-  }
-};
-
-const validateDuckForm = ({ name, imgUrl, quote }) => {
-  const newErrors = {};
-  if (!name.trim()) {
-    newErrors.name = 'Name is required';
-  }
-  if (!imgUrl.trim()) {
-    newErrors.imgUrl = 'Image URL is required';
-  } else if (!isValidUrl(imgUrl)) {
-    newErrors.imgUrl = 'Image must be a valid URL';
-  }
-  if (!quote.trim()) {
-    newErrors.quote = 'Quote is required';
-  }
-  return newErrors;
-};
-
-export { isValidUrl, validateDuckForm };
-```
-
-- then import what's needed
-
-```js
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { validateDuckForm } from '../../utils';
-```
-
-#### Your project won't include routing, but all that would change from today is the placement of the `ToastContainer`
 
 ### Walk through project requirements, show DaisyUI modal
