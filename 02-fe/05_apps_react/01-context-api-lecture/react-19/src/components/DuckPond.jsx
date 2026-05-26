@@ -1,9 +1,8 @@
-import { use } from 'react';
 import DuckCard from './DuckCard';
-import { DuckContext } from '../context/duckContext';
+import { useDucks } from '../context/duckContext';
 
 const DuckPond = () => {
-	const { ducks, loading, error } = use(DuckContext);
+	const { ducks, loading, error } = useDucks();
 	// console.log(context);
 	return (
 		<section

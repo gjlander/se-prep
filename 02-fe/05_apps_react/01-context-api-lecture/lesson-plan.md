@@ -249,113 +249,30 @@ const DuckPond = () => {
 
 ### Passing our setter
 
-- Now in `MyPond` we can clear out our `myDucks` state, and remove `setDucks` from props
+- We can do the same for `setDucks` and `DuckForm`
 
 ```js
-import { DuckPond, UseActionState } from '../components';
-
-const MyPond = () => {
-	return (
-		<>
-			<DuckPond />
-			<UseActionState />
-		</>
-	);
-};
-
-export default MyPond;
-```
-
-- And in `DuckForm/UseActionState` we consume the context instead of relying on props
-
-```js
-import { useActionState, useState, use } from 'react';
-import { toast } from 'react-toastify';
-import { DuckContext } from '../../context';
-import { createDuck } from '../../data';
-import { validateDuckForm, sleep } from '../../utils';
-
+import { useState, use } from 'react';
+import { DuckContext } from '../context/duckContext';
 const DuckForm = () => {
 	const { setDucks } = use(DuckContext);
-	// rest of component...
+	//  rest of component...
 };
 ```
 
-### This technically works, and we could stop here and have a function app with context. But there's a couple of improvement we can make in organizing our code
-
-## Creating a custom useDucks hook
-
-- You may have noticed we now need to import 2 things into every component we want to use our DuckContext in
-  - use from 'react'
-  - DuckContext from our context file
-- Not the end of the world, but since these 2 things are needed EVERY time we want to use the context, we can create a custom hook to handle that for us
-- `context/index.js`
-
-```js
-import { createContext, use } from 'react';
-
-const DuckContext = createContext();
-
-const useDucks = () => {
-	const context = use(DuckContext);
-	return context;
-};
-
-export { DuckContext, useDucks };
-```
-
-- Since this can only be used inside of the DuckContext, let's throw an Error if they try to use it outside
-
-```js
-const useDucks = () => {
-	const context = use(DuckContext);
-	if (!context) throw new Error('useDucks must be used within a DuckContext');
-	return context;
-};
-```
-
-- Now we can update `DuckPond` and `UseActionState/DuckForm` to use our custom hook
-- `DuckPond.jsx`
-
-```js
-import { Link } from 'react-router';
-import { useDucks } from '../../context';
-import DuckCard from './DuckCard';
-
-const DuckPond = () => {
-	const { ducks } = useDucks();
-	// rest of component...
-};
-```
-
-- `UseActionState.jsx`
-
-```js
-import { useActionState, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useDucks } from '../../context';
-import { createDuck } from '../../data';
-import { validateDuckForm, sleep } from '../../utils';
-
-const DuckForm = () => {
-	const { setDucks } = useDucks();
-	// rest of component...
-};
-```
-
-### This is nice, but our MainLayout is a bit cluttered...
+### This technically works, and we could stop here and have a functioning app with context. But there's a couple of improvement we can make in organizing our code
 
 ## Created a separate DuckProvider
 
-- Our MainLayout should only be concerned with rendering the layout, so let's modularize our code by creating a special `DuckProvider` component
+- Currently all of our duck login is in `App.jsx`, but when we introduce routing, this will become an issue. A better way to organize our code, is to create a separate component where all of that logic will live
 - Make `DuckProvider.jsx` inside `context` folder
 - Move all of our duck logic in there
 
 ```js
 import { useState, useEffect } from 'react';
 
-import { getAllDucks } from '../data';
-import { DuckContext } from '../context';
+import { getAllDucks } from '../data/ducks';
+import { DuckContext } from './duckContext';
 
 const DuckProvider = () => {
 	const [ducks, setDucks] = useState([]);
@@ -393,73 +310,123 @@ const DuckProvider = () => {
 export default DuckProvider;
 ```
 
-- import and re-export it from `index.js`
+- Now we can wrap our whole application in this provider instead of our `DuckContext`
 
 ```js
-import { createContext, use } from 'react';
-import DuckProvider from './DuckProvider';
-const DuckContext = createContext();
+import { useState, useEffect } from 'react';
+import { getAllDucks } from './data/ducks';
+import { DuckContext } from './context/duckContext';
+import DuckProvider from './context/DuckProvider';
 
-const useDucks = () => {
-	const context = use(DuckContext);
-	if (!context) throw new Error('useDucks must be used within a DuckContext');
-	return context;
-};
+import Navbar from './components/Navbar';
+import Header from './components/Header';
+import DuckPond from './components/DuckPond';
+import DuckForm from './components/DuckForm';
+import Footer from './components/Footer';
 
-export { DuckContext, useDucks, DuckProvider };
-```
-
-- Now we can wrap our whole application in this provider
-
-```js
-import { Outlet } from 'react-router';
-import { ToastContainer } from 'react-toastify';
-import { DuckProvider } from '../context';
-import { Navbar, Footer } from '../components';
-
-const MainLayout = () => {
+function App() {
 	return (
 		<DuckProvider>
 			<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
 				<Navbar />
+				<Header />
 				<main className='flex-grow flex flex-col justify-between py-4'>
-					<Outlet />
+					<DuckPond />
+					<DuckForm />
 				</main>
 				<Footer />
-				<ToastContainer />
 			</div>
 		</DuckProvider>
 	);
-};
+}
 
-export default MainLayout;
+export default App;
 ```
 
 - You may notice though, that nothing is rendering now
 - We still have to render what's between the provider
 
 ```js
-<DuckContext value={{ ducks, setDucks }}>
+<DuckContext value={{ ducks, setDucks, loading, error }}>
 	<div>Where's my stuff?</div>
 </DuckContext>
 ```
 
-- Because we have children nested inside of the component, it gives us access to a special React prop - `children`
+- This is where that special `children` prop comes in Because we have children nested inside of the component, it gives us access to it.
 - If we pass `children` as a prop, then render it, everything that's nested will get rendered
 
 ```js
 const DuckProvider = ({ children }) => {
 	// app logic...
-	return <DuckContext value={{ ducks, setDucks }}>{children}</DuckContext>;
+	return (
+		<DuckContext value={{ ducks, setDucks, loading, error }}>
+			{children}
+		</DuckContext>
+	);
 };
 ```
 
 - Now everything's back!
 
+## Creating a custom useDucks hook
+
+- You may have noticed we now need to import 2 things into every component we want to use our DuckContext in
+  - `use` from 'react'
+  - `DuckContext` from our context file
+- Not the end of the world, but since these 2 things are needed EVERY time we want to use the context, we can create a custom hook to handle that for us
+- `context/duckContext.js`
+
+```js
+import { createContext, use } from 'react';
+
+const DuckContext = createContext();
+
+const useDucks = () => {
+	const context = use(DuckContext);
+	return context;
+};
+
+export { DuckContext, useDucks };
+```
+
+- Since this can only be used inside of the DuckContext, let's throw an Error if they try to use it outside
+
+```js
+const useDucks = () => {
+	const context = use(DuckContext);
+	if (!context) throw new Error('useDucks must be used within a DuckContext');
+	return context;
+};
+```
+
+- Now we can update `DuckPond` and `DuckForm` to use our custom hook
+- `DuckPond.jsx`
+
+```js
+import DuckCard from './DuckCard';
+import { useDucks } from '../context/duckContext';
+
+const DuckPond = () => {
+	const { ducks, loading, error } = useDucks();
+	// rest of component...
+};
+```
+
+- `DuckForm.jsx`
+
+```js
+import { useState } from 'react';
+import { useDucks } from '../context/duckContext';
+const DuckForm = () => {
+	const { setDucks } = useDucks();
+	// rest of component...
+};
+```
+
 ## Notes on Context
 
 - When a state from the context provider tree changes, it rerenders the whole tree, so this doesn't improve performance over prop drilling
-- For more complex applications, it could be worth looking into a state management library (after the bootcamp)
+- For more complex applications, it could be worth looking into a state management library such as Zustand or Redux (after the bootcamp)
 - Context is mainly about writing scalable, and maintainable code
 - Most useful when something is needed in deeply nested components AND several places
 
