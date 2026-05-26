@@ -14,6 +14,7 @@
 
 - ASP.NET gives us a lot more setup than Express offered. We had to add our own `console.log()` to see the local URL, that's taken care of for us
 - Unlike Express, where we set the port in a variable, now it's in our `launchSettings.json` file
+  - `launchSettings.json` is only for development, isn't included when compiling for production
 
 ## Enabling HTTPS locally
 
@@ -25,7 +26,15 @@
 
 ## Configuration files in .NET
 
-- Nothing to add
+`appSettings.json`
+
+- This is where we'll later add connection strings, and other configuration settings. For that reason, we'll add it to `.gitignore`, and when we get to deployment we'll look at how we can securely add those configuration settings using Azure
+- We can override settings for our 3 environments
+
+`launchSettings.json`
+
+- We can add additional environment variables here, if you add anything sensitive, it should also be in your `.gitignore`
+- You can use a `.env` file like in the JS ecosystem, but requires additional libraries, and some additional overhead. It's possible, but less common than in JS world because of the other config files
 
 ## Hosting in .NET
 

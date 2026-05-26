@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { Post } from '#models';
 
-const hasRole = (...roles: string[]): RequestHandler => {
+const hasRole = (...allowedRoles: string[]): RequestHandler => {
   return async (req, _res, next) => {
     if (!req.user) return next(new Error('Unauthorized', { cause: { status: 401 } }));
 
@@ -21,7 +21,7 @@ const hasRole = (...roles: string[]): RequestHandler => {
       return next();
     }
 
-    if (roles.includes('self')) {
+    if (allowedRoles.includes('self')) {
       if (post?.author.toString() !== userId) {
         return next(new Error('Forbidden', { cause: { status: 403 } }));
       }

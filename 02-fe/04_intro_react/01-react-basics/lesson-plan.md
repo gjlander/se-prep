@@ -111,7 +111,7 @@ body {
 
 ### Tailwind
 
-- Just like with Parcel, to use Tailwind, we have to install it
+- Just like our Vanilla JS Vite setup, to use Tailwind, we have to install it
 - The configuration is a bit different for React, there are instructions in the LMS, but Tailwind also has a [guide for Vite](https://tailwindcss.com/docs/installation/using-vite)
 - Setting up Tailwind isn't our focus for today, so sit back and relax while I set it up
 - Now our page isn't ugly anymore!
@@ -187,7 +187,12 @@ export default Header;
 
 ```js
 const DuckPond = () => {
-	return <section id='pond' className='flex justify-center flex-wrap gap-4 p-4 w-full'></section>;
+	return (
+		<section
+			id='pond'
+			className='flex justify-center flex-wrap gap-4 p-4 w-full'
+		></section>
+	);
 };
 
 export default DuckPond;
@@ -329,7 +334,10 @@ import DuckCard from './DuckCard';
 
 const DuckPond = () => {
 	return (
-		<section id='pond' className='flex justify-center flex-wrap gap-4 p-4 w-full'>
+		<section
+			id='pond'
+			className='flex justify-center flex-wrap gap-4 p-4 w-full'
+		>
 			<DuckCard />
 		</section>
 	);
@@ -403,7 +411,10 @@ const singleDuck = {
 };
 const DuckPond = () => {
 	return (
-		<section id='pond' className='flex justify-center flex-wrap gap-4 p-4 w-full'>
+		<section
+			id='pond'
+			className='flex justify-center flex-wrap gap-4 p-4 w-full'
+		>
 			<DuckCard duck={singleDuck} />
 		</section>
 	);
@@ -482,7 +493,7 @@ export default DuckCard;
 
 ```js
 {
-	ducksInThePond.map(duck => <DuckCard {...duck} />);
+	ducksInThePond.map((duck) => <DuckCard {...duck} />);
 }
 ```
 
@@ -534,7 +545,7 @@ export default Navbar;
 - By convention these are often called handle<event>
 
 ```js
-const handleChange = e => {
+const handleChange = (e) => {
 	console.log(e.target.value);
 };
 ```
@@ -555,7 +566,7 @@ const handleChange = e => {
 
 ```jsx
 <input
-	onChange={e => console.log(e.target.value)}
+	onChange={(e) => console.log(e.target.value)}
 	id='img-url'
 	type='url'
 	placeholder='What does your duck look like?'

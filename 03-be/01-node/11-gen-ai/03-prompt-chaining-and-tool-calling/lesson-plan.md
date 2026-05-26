@@ -247,7 +247,6 @@ res.json(finalResponse);
 
 - The repo linked here is just the result from the Prompt Chaining Tutorial, so we'll just continue building on ours
 - We'll need 2 functions to list as tools
-
   1.  `get_pokemon` - to call the PokeAPI
   2.  `return_error` - a fallback, just in case we run into a error, so we have proper error handling
 
@@ -515,6 +514,7 @@ if (name === 'return_error') {
 ```
 
 - We'll then push this message to our `messages` array, and add the result as `content`
+  - Update to `JSON.parse()`
 
 ```ts
 messages.push({

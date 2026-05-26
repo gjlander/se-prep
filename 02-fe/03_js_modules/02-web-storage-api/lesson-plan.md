@@ -12,8 +12,8 @@
 
 ## Tour of the app
 
-- Since our app is growing, used a common structure, where we have our `index.html` file in the root folder, and then create a `src` folder for all of our other files
-- Added a second page for adding a duck to our person pond (in local storage)
+- Since our app is growing, used a common structure, where we have our `index.html` and config files in the root folder, and then create a `src` folder for all of our other files
+- Added a second page for adding a duck to our personal pond (in local storage)
 - and a new `js` file for the new page
 
 #### We'll work up to that, but first let's go over some basics of localStorage
@@ -49,7 +49,7 @@ console.log('value of newThing: ', myNewThing);
 
 ```js
 setTimeout(() => {
-  localStorage.removeItem('newThing');
+	localStorage.removeItem('newThing');
 }, 3000);
 ```
 
@@ -57,9 +57,9 @@ setTimeout(() => {
 
 ```js
 setTimeout(() => {
-  localStorage.removeItem('newThing');
-  console.log('after removing: ', localStorage.getItem('newThing'));
-  console.log('variable after removing: ', myNewThing);
+	localStorage.removeItem('newThing');
+	console.log('after removing: ', localStorage.getItem('newThing'));
+	console.log('variable after removing: ', myNewThing);
 }, 3000);
 ```
 
@@ -73,8 +73,14 @@ setTimeout(() => {
 
 ```js
 localStorage.setItem('newThing', 'Look Ma, I set something in localStorage!');
-localStorage.setItem('secondThing', 'Look Ma, I set something else in localStorage!');
-localStorage.setItem('thirdThing', 'Look Ma, I set a third thing in localStorage!');
+localStorage.setItem(
+	'secondThing',
+	'Look Ma, I set something else in localStorage!'
+);
+localStorage.setItem(
+	'thirdThing',
+	'Look Ma, I set a third thing in localStorage!'
+);
 localStorage.clear();
 ```
 
@@ -91,35 +97,35 @@ localStorage.clear();
 - Let's start with just setting it to localStorage
 
 ```js
-addForm.addEventListener('submit', e => {
-  e.preventDefault();
+addForm.addEventListener('submit', (e) => {
+	e.preventDefault();
 
-  const name = addForm.querySelector('#name');
-  const imgUrl = addForm.querySelector('#img-url');
-  const quote = addForm.querySelector('#quote');
+	const name = addForm.querySelector('#name');
+	const imgUrl = addForm.querySelector('#img-url');
+	const quote = addForm.querySelector('#quote');
 
-  try {
-    if (!name.value.trim()) {
-      throw new Error('Name is required');
-    }
-    if (!imgUrl.value.trim()) {
-      throw new Error('Image URL is required');
-    }
-    if (!quote.value.trim()) {
-      throw new Error('Quote is required');
-    }
+	try {
+		if (!name.value.trim()) {
+			throw new Error('Name is required');
+		}
+		if (!imgUrl.value.trim()) {
+			throw new Error('Image URL is required');
+		}
+		if (!quote.value.trim()) {
+			throw new Error('Quote is required');
+		}
 
-    const newDuck = {
-      _id: ducksInThePond.length,
-      name: name.value,
-      imgUrl: imgUrl.value,
-      quote: quote.value
-    };
+		const newDuck = {
+			_id: ducksInThePond.length,
+			name: name.value,
+			imgUrl: imgUrl.value,
+			quote: quote.value
+		};
 
-    localStorage.setItem('newDuck', newDuck);
-  } catch (error) {
-    alert(error.message);
-  }
+		localStorage.setItem('newDuck', newDuck);
+	} catch (error) {
+		alert(error.message);
+	}
 });
 ```
 
@@ -209,31 +215,32 @@ const myDucks = JSON.parse(localStorage.getItem('myDucks')) || [];
 const myPond = document.querySelector('#my-pond');
 
 const renderSingleDuck = (duckObj, container) => {
-  const { imgUrl, name, quote } = duckObj;
-  const card = document.createElement('div');
-  card.className = 'shadow-xl hover:shadow-2xl hover:cursor-pointer w-96 rounded-md m-auto flex-flex-col';
+	const { imgUrl, name, quote } = duckObj;
+	const card = document.createElement('div');
+	card.className =
+		'shadow-xl hover:shadow-2xl hover:cursor-pointer w-96 rounded-md m-auto flex-flex-col';
 
-  const figure = document.createElement('figure');
-  figure.className = 'rounded-t-md overflow-hidden w-full h-96';
-  const img = document.createElement('img');
-  img.src = imgUrl;
-  img.alt = name;
-  figure.appendChild(img);
+	const figure = document.createElement('figure');
+	figure.className = 'rounded-t-md overflow-hidden w-full h-96';
+	const img = document.createElement('img');
+	img.src = imgUrl;
+	img.alt = name;
+	figure.appendChild(img);
 
-  const body = document.createElement('div');
-  body.className = 'flex flex-col p-6 pt-2 rounded-b-md bg-slate-800 h-40';
-  const title = document.createElement('h2');
-  title.className = 'text-3xl border-b-2 mb-4 border-b-gray-400';
-  title.textContent = name;
-  const text = document.createElement('p');
-  text.textContent = quote;
-  body.appendChild(title);
-  body.appendChild(text);
+	const body = document.createElement('div');
+	body.className = 'flex flex-col p-6 pt-2 rounded-b-md bg-slate-800 h-40';
+	const title = document.createElement('h2');
+	title.className = 'text-3xl border-b-2 mb-4 border-b-gray-400';
+	title.textContent = name;
+	const text = document.createElement('p');
+	text.textContent = quote;
+	body.appendChild(title);
+	body.appendChild(text);
 
-  card.appendChild(figure);
-  card.appendChild(body);
+	card.appendChild(figure);
+	card.appendChild(body);
 
-  container.appendChild(card);
+	container.appendChild(card);
 };
 ```
 
@@ -247,7 +254,7 @@ renderSingleDuck(newDuck, myPond);
 ### While we're at it, let's render all of our ducks in localStorage
 
 ```js
-myDucks.forEach(duck => {
-  renderSingleDuck(duck, myPond);
+myDucks.forEach((duck) => {
+	renderSingleDuck(duck, myPond);
 });
 ```

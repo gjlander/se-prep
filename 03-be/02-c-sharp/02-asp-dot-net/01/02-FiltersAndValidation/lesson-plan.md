@@ -48,6 +48,7 @@ public record JournalEntryRequestDto(string Title, string Content);
 ```
 
 - `Models/JournalEntry.cs`
+  - remove errors with `= string.Empty`
 
 ```c#
 namespace FiltersLecture.Models;

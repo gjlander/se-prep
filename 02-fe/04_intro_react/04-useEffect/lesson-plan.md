@@ -135,7 +135,7 @@ const allDucks = await getAllDucks(abortController);
 - `ducks.js`
 
 ```js
-const getAllDucks = async abortCont => {
+const getAllDucks = async (abortCont) => {
 	const res = await fetch('https://duckpond-89zn.onrender.com/wild-ducks', {
 		signal: abortCont.signal
 	});
@@ -178,9 +178,14 @@ finally {
 ```js
 const DuckPond = ({ ducks, loading }) => {
 	return (
-		<section id='pond' className='flex justify-center flex-wrap gap-4 p-4 w-full'>
-			{loading && <p className='text-center text-gray-600 font-medium'>Loading...</p>}
-			{!loading && ducks.map(duck => <DuckCard key={duck._id} {...duck} />)}
+		<section
+			id='pond'
+			className='flex justify-center flex-wrap gap-4 p-4 w-full'
+		>
+			{loading && (
+				<p className='text-center text-gray-600 font-medium'>Loading...</p>
+			)}
+			{!loading && ducks.map((duck) => <DuckCard key={duck._id} {...duck} />)}
 		</section>
 	);
 };
@@ -189,7 +194,7 @@ const DuckPond = ({ ducks, loading }) => {
 - We can use the `sleep` function to simulate a slow network request
 
 ```js
-const sleep = ms => new Promise(res => setTimeout(res, ms));
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 await sleep(2000);
 ```
@@ -223,10 +228,17 @@ catch (error) {
 ```js
 const DuckPond = ({ ducks, loading, error }) => {
 	return (
-		<section id='pond' className='flex justify-center flex-wrap gap-4 p-4 w-full'>
+		<section
+			id='pond'
+			className='flex justify-center flex-wrap gap-4 p-4 w-full'
+		>
 			{loading && <p className='text-center font-medium'>Loading...</p>}
-			{error && <p className='text-center text-red-500 font-semibold'>{error}</p>}
-			{!loading && !error && ducks.map(duck => <DuckCard key={duck._id} {...duck} />)}
+			{error && (
+				<p className='text-center text-red-500 font-semibold'>{error}</p>
+			)}
+			{!loading &&
+				!error &&
+				ducks.map((duck) => <DuckCard key={duck._id} {...duck} />)}
 		</section>
 	);
 };
@@ -238,7 +250,3 @@ const DuckPond = ({ ducks, loading, error }) => {
    - If the answer is no, use state to update the UI
 2. Is this update based on user input or action?
    - If the answer is yes, make the fetch request, or whatever logic is needed, inside of an event handler.
-
-```
-
-```

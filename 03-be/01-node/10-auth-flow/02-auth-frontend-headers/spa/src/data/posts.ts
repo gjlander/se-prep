@@ -82,7 +82,6 @@ export const deletePost = async (id: string) => {
 	const res = await fetch(`${baseURL}/${id}`, {
 		method: 'DELETE',
 		headers: {
-			'Content-Type': 'application/json',
 			Authorization: `Bearer ${accessToken}`
 		}
 	});

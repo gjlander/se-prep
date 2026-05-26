@@ -69,6 +69,8 @@ console.log(20 + 5);
 ## Variables
 
 - store addition in a variable, and log it
+- case sensitive
+- camel casing naming convention
 
 ### JavaScript is dynamically typed, and synchronous
 
@@ -122,28 +124,28 @@ console.log(20 + 5);
 
 ### Switch statements
 
-- Long chains of else if gets hard to read, then use switch
+- if/else if chains are good when you want a range of values, switch is good for checking several specific values
 - Show example with DnD classes logging a catch phrase
 
 ```js
 let characterClass = 'wizard';
 
 switch (characterClass) {
-  // (characterClass === 'fighter')
-  case 'fighter':
-    console.log("I'm very strategic!");
-    break;
-  case 'monk':
-    console.log('Who needs weapons, when I have my fists!');
-    break;
-  case 'wizard':
-    console.log('I get my magic from books.');
-  case 'sorcerer':
-  case 'warlock':
-    console.log('I can do powerful magic!');
-    break;
-  default:
-    console.log('I love DnD!');
+	// (characterClass === 'fighter')
+	case 'fighter':
+		console.log("I'm very strategic!");
+		break;
+	case 'monk':
+		console.log('Who needs weapons, when I have my fists!');
+		break;
+	case 'wizard':
+		console.log('I get my magic from books.');
+	case 'sorcerer':
+	case 'warlock':
+		console.log('I can do powerful magic!');
+		break;
+	default:
+		console.log('I love DnD!');
 }
 ```
 
@@ -159,7 +161,7 @@ switch (characterClass) {
 
 ```js
 function sayHelloWorld() {
-  console.log('Hello World!');
+	console.log('Hello World!');
 }
 ```
 
@@ -174,7 +176,7 @@ function sayHelloWorld() {
 
 ```js
 const goodByeWorld = function () {
-  console.log('Goodbye, cruel world!');
+	console.log('Goodbye, cruel world!');
 };
 goodByeWorld();
 ```
