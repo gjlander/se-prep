@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { getAllDucks } from '../data';
-import { DuckContext } from '../context';
+import { DuckContext } from '.';
 
 const DuckProvider = ({ children }) => {
 	const [ducks, setDucks] = useState([]);

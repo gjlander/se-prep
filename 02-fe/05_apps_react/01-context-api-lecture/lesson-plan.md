@@ -1,14 +1,11 @@
 # Context API
 
 - When you have a piece of state ( or any data) that's needed in several parts of your application, passing deeply nested state can become annoying
-- To solve that issue, React has the Context API. This is what was working under the hood to make `useOutletContext` work
-
-## Local Playground example
-
-- I've downloaded the [first slide of the context api playground](https://playground.wbscod.in/react/react-context-api/1), and given it the proper directory structure
-- I've also added an example of prop drilling to compare it to
+- To solve that issue, React has the Context API. Before we talk about it, let's go over 2 important concepts first
 
 ## Prop Drilling
+
+- I've downloaded the prop drilling example, and the context example, and given it the proper directory structure
 
 - I've used this word before, but I don't think I've proper explained it
 - We have defined a `user` in `App`, and we need access to that data in `NoContextGranChild`. Let's say, for whatever reason, that data is needed in other component trees, so we can't move it closer to the component that needs it.
@@ -47,11 +44,15 @@ const NoContextChild = ({ user }) => {
 - Where it is FINALLY used. This act of a component that doesn't need the state simply passing it on to a child, is what's known as prop drilling
 - This can become difficult to keep track of, and a bit unwieldy to use...
 
-## So we use Context instead
+## Children prop
+
+- Go over LMS example
+
+## Now let's look at the Context API
 
 - The Context API has two main functions
-  - createContext allows us to create the context object itself
-  - use hook allows us to access the value of the context object
+  - `createContext` allows us to create the context object itself
+  - `use` allows us to access the value of the context object
     - `use` was introduced in React 19 and has a dual purpose of consuming Promises and context
     - `useContext` was used before React 19, and is still usable, but we will default to using `use`
 - So, in `App.jsx`, we first have to create the UserContext ( and export it)
@@ -95,12 +96,12 @@ export default ContextGranChild;
 
 ## Creating a DuckContext
 
-- Currently we have a `ducks` state in `Home.jsx` and a `myDucks` state in `MyPond.jsx`. Since our form isn't saving to local storage anymore, let's unify that into one state that can be used across our app
+- We have a global `ducks` state, and with the size of our app we could probably get away with that. But we're going to introduce routing soon, so let's move that state into a context to prepare for scaling up our application.
 
 ### Create a new context folder, and create our new context
 
 - Make `context` folder
-- Make `index.js`
+- Make `duckContext.js`
 
 ```js
 import { createContext } from 'react';
@@ -110,60 +111,41 @@ const DuckContext = createContext();
 export { DuckContext };
 ```
 
-- Now back in `MainLayout.jsx`, we import the DuckContext, and wrap our whole application in it
-
-```js
-import { Outlet } from 'react-router';
-import { ToastContainer } from 'react-toastify';
-import { DuckContext } from '../context';
-import { Navbar, Footer } from '../components';
-
-const MainLayout = () => {
-	return (
-		<DuckContext>
-			<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
-				<Navbar />
-				<main className='flex-grow flex flex-col justify-between py-4'>
-					<Outlet />
-				</main>
-				<Footer />
-				<ToastContainer />
-			</div>
-		</DuckContext>
-	);
-};
-
-export default MainLayout;
-```
-
-- Now let's initialize our `ducks` state in `MainLayout.jsx` instead of `Home.jsx`, along with our `error` and `loading` states
+- Now back in `App.jsx`, we import the `DuckContext`, and wrap our whole application in it
 
 ```js
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router';
-import { ToastContainer } from 'react-toastify';
-import { getAllDucks } from '../data';
-import { DuckContext } from '../context';
-import { Navbar, Footer } from '../components';
+import { getAllDucks } from './data/ducks';
+import { DuckContext } from './context/duckContext';
 
-const MainLayout = () => {
+import Navbar from './components/Navbar';
+import Header from './components/Header';
+import DuckPond from './components/DuckPond';
+import DuckForm from './components/DuckForm';
+import Footer from './components/Footer';
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
+function App() {
 	const [ducks, setDucks] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+
 	useEffect(() => {
 		const abortController = new AbortController();
 		(async () => {
 			setLoading(true);
 			setError(null);
 			try {
-				const duckData = await getAllDucks(abortController);
-				setDucks(duckData);
+				await sleep(2000);
+				const allDucks = await getAllDucks(abortController);
+
+				setDucks(allDucks);
 			} catch (error) {
 				if (error.name === 'AbortError') {
-					console.info('Fetch Aborted');
+					console.info('Fetch aborted');
 				} else {
 					console.error(error);
-					setError('Error bringing ducks to the pond.');
+					setError('Error bringing ducks to the pond');
 				}
 			} finally {
 				setLoading(false);
@@ -174,28 +156,40 @@ const MainLayout = () => {
 			abortController.abort();
 		};
 	}, []);
-	// jsx...
-};
+	return (
+		<DuckContext>
+			<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
+				<Navbar />
+				<Header />
+				<main className='flex-grow flex flex-col justify-between py-4'>
+					<DuckPond error={error} loading={loading} ducks={ducks} />
+					<DuckForm setDucks={setDucks} />
+				</main>
+				<Footer />
+			</div>
+		</DuckContext>
+	);
+}
+
+export default App;
 ```
 
-- Then we pass our states and setters that other components will need as `value` to our `DuckContext`
-
+- Now instead of passing props, we pass our states and setters that other components will need as `value` to our `DuckContext`
   - Since we're passing several values now, we'll use the double `{}` syntax to pass them as an object
 
 ```js
  <DuckContext value={{ ducks, setDucks, loading, error }}>
 ```
 
-- Now back in `Home.jsx` we can clear out the state and useEffect, and since `Home` doesn't need the state anyway, we can move directly into `DuckPond` instead of passing props (we can do this since we won't use the `myDucks` state anymore either, otherwise we would still pass it as props to `DuckPond`)
+- Now in `DuckPond` instead of receiving props we consume the duck context
 - For that we'll need to import
   - `use` from React
-  - `DuckContext` from `../context`
+  - `DuckContext` from `../context/duckContext.js`
 
 ```js
 import { use } from 'react';
-import { Link } from 'react-router';
-import { DuckContext } from '../../context';
 import DuckCard from './DuckCard';
+import { DuckContext } from '../context/duckContext';
 ```
 
 - Then call `use` and pass our `DuckContext` as an argument and store the return in a variable
@@ -209,11 +203,13 @@ const DuckPond = () => {
 			id='pond'
 			className='flex justify-center flex-wrap gap-4 p-4 w-full'
 		>
-			{/* {ducks.map(duck => (
-        <Link key={duck._id} to={`ducks/${duck._id}`}>
-          <DuckCard {...duck} />
-        </Link>
-      ))} */}
+			{/* {loading && <p className='text-center font-medium'>Loading...</p>}
+			{error && (
+				<p className='text-center text-red-500 font-semibold'>{error}</p>
+			)}
+			{!loading &&
+				!error &&
+				ducks.map((duck) => <DuckCard key={duck._id} {...duck} />)} */}
 		</section>
 	);
 };
@@ -241,7 +237,7 @@ const DuckPond = () => {
 			)}
 			{!loading &&
 				!error &&
-				ducks.map(duck => (
+				ducks.map((duck) => (
 					<Link key={duck._id} to={`ducks/${duck._id}`}>
 						<DuckCard {...duck} />
 					</Link>
@@ -250,8 +246,6 @@ const DuckPond = () => {
 	);
 };
 ```
-
-- Since we're recycling this component in `MyPond`, we can also see it working there
 
 ### Passing our setter
 
