@@ -11,6 +11,48 @@
 
 - As your applications grow, it can be useful to add a component library of some kind on top of what Tailwind provides. There are many out there, but we recommend [DaisyUI](https://learn.wbscodingschool.com/courses/full-stack-web-app/lessons/module-project-personal-diary/topic/%f0%9f%93%96-our-basic-setup-daisyui/)
 - It adds component class names like 'btn' and more, saving you from having to create your own with `@layer components` rules. It's highly customizable, but works out of the box
+- Install in project
+- Replace Navbar
+
+```js
+import { useState } from 'react';
+const Navbar = () => {
+	const [isSignedIn, setIsSignedIn] = useState(false);
+	const handleClick = () => setIsSignedIn((prev) => !prev);
+	return (
+		<div className='navbar bg-slate-800'>
+			<nav className='navbar-start'>
+				<a className='font-bold' href='/'>
+					The Duck Pond
+				</a>
+			</nav>
+			<nav className='navbar-end'>
+				<ul className='menu menu-horizontal items-baseline gap-2'>
+					<li>
+						<a href='index.html'>Home</a>
+					</li>
+					<li>
+						<a href='src/myPond.html'>My Pond</a>
+					</li>
+					<li>
+						{isSignedIn ? (
+							<button className='btn btn-primary' onClick={handleClick}>
+								Sign Out
+							</button>
+						) : (
+							<button className='btn btn-primary' onClick={handleClick}>
+								Sign In
+							</button>
+						)}
+					</li>
+				</ul>
+			</nav>
+		</div>
+	);
+};
+
+export default Navbar;
+```
 
 # Better Form Validation
 

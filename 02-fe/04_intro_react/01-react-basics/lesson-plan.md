@@ -32,7 +32,7 @@
 ### main.jsx
 
 - Our `main.jsx` is mainly for wiring up React to work properly, we won't write much in this file
-- We use the jsx extension to let us write JavaScript XML, which allows us to write code that looks like HTML inside of our JS files. Go to [slide 3](https://playground.wbscod.in/react/react-basics-20/3)
+- We use the jsx extension to let us write JavaScript XML, which allows us to write code that looks like HTML inside of our JS files. Go to `JSX` page
 - This all gets compiled into Vanilla JS in the end, hence our need for a bundler. .
 - Possible to use React without JSX, but not recommended. It is also possible to use JSX outside of React, but it was developed for React
 - We use imports to use the files we need, we now import css instead of using the link tag - this is a feature added by Vite

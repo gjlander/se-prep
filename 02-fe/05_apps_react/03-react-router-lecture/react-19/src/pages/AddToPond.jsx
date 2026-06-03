@@ -7,18 +7,17 @@ import DuckProvider from '../context/DuckProvider';
 
 import Navbar from '../components/Navbar';
 import Header from '../components/Header';
-import DuckPond from '../components/DuckPond';
 import DuckForm from '../components/DuckForm';
 import Footer from '../components/Footer';
 
-const Home = () => {
+const AddToPond = () => {
 	return (
 		<DuckProvider>
 			<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
 				<Navbar />
-				<Header />
 				<main className='flex-grow flex flex-col justify-start py-4'>
-					<DuckPond />
+					<Header />
+					<DuckForm />
 				</main>
 				<Footer />
 			</div>
@@ -27,4 +26,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default AddToPond;

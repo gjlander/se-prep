@@ -43,9 +43,9 @@
 ```js
 import { useState } from 'react';
 const Navbar = () => {
-  // const isSignedIn = false;
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  //...rest of component
+	// const isSignedIn = false;
+	const [isSignedIn, setIsSignedIn] = useState(false);
+	//...rest of component
 };
 ```
 
@@ -72,7 +72,7 @@ const handleClick = () => setIsSignedIn(true);
 - Since this is a simple boolean switch, we can simply set it to the logical opposite
 
 ```js
-const handleClick = () => setIsSignedIn(prev => !prev);
+const handleClick = () => setIsSignedIn((prev) => !prev);
 ```
 
 - Then add it as an onClick to our sign out button
@@ -103,12 +103,12 @@ const handleClick = () => setIsSignedIn(prev => !prev);
 ```js
 import { useState } from 'react';
 const DuckForm = () => {
-  const [form, setForm] = useState({
-    name: '',
-    imgUrl: '',
-    quote: ''
-  });
-  //...rest of component
+	const [form, setForm] = useState({
+		name: '',
+		imgUrl: '',
+		quote: ''
+	});
+	//...rest of component
 };
 ```
 
@@ -118,42 +118,42 @@ const DuckForm = () => {
 
 ```js
 <form id='add-form' className='flex flex-col gap-4 w-3/4'>
-  <label className='w-full flex gap-2 items-baseline'>
-    <span className='text-xl'>Name:</span>
-    <input
-      onChange={handleChange}
-      value={form.name}
-      name='name'
-      type='text'
-      placeholder="What is your duck's name?"
-      className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 flex-grow'
-    />
-  </label>
-  <label className='w-full flex gap-2 items-baseline'>
-    <span className='text-xl'>Image:</span>
-    <input
-      onChange={handleChange}
-      value={form.imgUrl}
-      name='imgUrl'
-      type='url'
-      placeholder='What does your duck look like?'
-      className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
-    />
-  </label>
-  <label className='w-full flex gap-2 items-baseline'>
-    <span className='text-xl'>Quote:</span>
-    <input
-      onChange={handleChange}
-      value={form.quote}
-      name='quote'
-      type='text'
-      placeholder='What does your duck say?'
-      className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
-    />
-  </label>
-  <button type='submit' className='bg-green-600 p-2 rounded-lg font-bold'>
-    Add duck
-  </button>
+	<label className='w-full flex gap-2 items-baseline'>
+		<span className='text-xl'>Name:</span>
+		<input
+			onChange={handleChange}
+			value={form.name}
+			name='name'
+			type='text'
+			placeholder="What is your duck's name?"
+			className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 flex-grow'
+		/>
+	</label>
+	<label className='w-full flex gap-2 items-baseline'>
+		<span className='text-xl'>Image:</span>
+		<input
+			onChange={handleChange}
+			value={form.imgUrl}
+			name='imgUrl'
+			type='url'
+			placeholder='What does your duck look like?'
+			className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
+		/>
+	</label>
+	<label className='w-full flex gap-2 items-baseline'>
+		<span className='text-xl'>Quote:</span>
+		<input
+			onChange={handleChange}
+			value={form.quote}
+			name='quote'
+			type='text'
+			placeholder='What does your duck say?'
+			className='bg-inherit border-solid border-2 border-slate-700 rounded-lg p-2 w-full'
+		/>
+	</label>
+	<button type='submit' className='bg-green-600 p-2 rounded-lg font-bold'>
+		Add duck
+	</button>
 </form>
 ```
 
@@ -168,8 +168,8 @@ const DuckForm = () => {
 - We can use the `e.target.name` as the key property, and update it to the `e.target.value`
 
 ```js
-const handleChange = e => {
-  setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+const handleChange = (e) => {
+	setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 };
 ```
 
@@ -187,18 +187,18 @@ const handleChange = e => {
 
 ```js
 function App() {
-  const [ducks, setDucks] = useState(ducksInThePond);
-  return (
-    <div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
-      <Navbar />
-      <Header />
-      <main className='flex-grow flex flex-col justify-between py-4'>
-        <DuckPond ducks={ducks} />
-        <DuckForm setDucks={setDucks} />
-      </main>
-      <Footer />
-    </div>
-  );
+	const [ducks, setDucks] = useState(ducksInThePond);
+	return (
+		<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
+			<Navbar />
+			<Header />
+			<main className='flex-grow flex flex-col justify-between py-4'>
+				<DuckPond ducks={ducks} />
+				<DuckForm setDucks={setDucks} />
+			</main>
+			<Footer />
+		</div>
+	);
 }
 ```
 
@@ -208,22 +208,22 @@ function App() {
 - We have everything we need, except the id, so let's add that
 
 ```js
-const handleSubmit = e => {
-  e.preventDefault();
-  const newDuck = { ...form, _id: crypto.randomUUID() };
-  console.log(newDuck);
+const handleSubmit = (e) => {
+	e.preventDefault();
+	const newDuck = { ...form, _id: crypto.randomUUID() };
+	console.log(newDuck);
 };
 ```
 
 - We can't mutate the original array, so we can use the spread operator again
 
 ```js
-const handleSubmit = e => {
-  e.preventDefault();
-  const newDuck = { ...form, _id: crypto.randomUUID() };
-  console.log(newDuck);
+const handleSubmit = (e) => {
+	e.preventDefault();
+	const newDuck = { ...form, _id: crypto.randomUUID() };
+	console.log(newDuck);
 
-  setDucks(prev => [...prev, newDuck]);
+	setDucks((prev) => [...prev, newDuck]);
 };
 ```
 
@@ -231,25 +231,25 @@ const handleSubmit = e => {
 - We can now use our state to validate the inputs, very similar to vanilla JS
 
 ```js
-const handleSubmit = e => {
-  e.preventDefault();
-  try {
-    if (!form.name.trim()) {
-      throw new Error('Name is required');
-    }
-    if (!form.imgUrl.trim()) {
-      throw new Error('Image URL is required');
-    }
-    if (!form.quote.trim()) {
-      throw new Error('Quote is required');
-    }
-    const newDuck = { ...form, _id: crypto.randomUUID() };
-    console.log(newDuck);
+const handleSubmit = (e) => {
+	e.preventDefault();
+	try {
+		if (!form.name.trim()) {
+			throw new Error('Name is required');
+		}
+		if (!form.imgUrl.trim()) {
+			throw new Error('Image URL is required');
+		}
+		if (!form.quote.trim()) {
+			throw new Error('Quote is required');
+		}
+		const newDuck = { ...form, _id: crypto.randomUUID() };
+		console.log(newDuck);
 
-    setDucks(prev => [...prev, newDuck]);
-  } catch (error) {
-    alert(error.message);
-  }
+		setDucks((prev) => [...prev, newDuck]);
+	} catch (error) {
+		alert(error.message);
+	}
 };
 ```
 
@@ -257,8 +257,8 @@ const handleSubmit = e => {
 
 ```js
 setForm({
-  name: '',
-  imgUrl: '',
-  quote: ''
+	name: '',
+	imgUrl: '',
+	quote: ''
 });
 ```

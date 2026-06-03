@@ -4,28 +4,28 @@
 
 - Initial setup for static routes
 - Link and NavLink
-- Layout and Outlet (nested routes)
+- useNavigate and Navigate
 - Dynamic Routes and useParams
-- useNavigate
-- project org with index file
+- splat routes
 
 ## Initial Setup
 
 ### Reorganize for routing
 
 - First, let's move everything inside of our App function into a new `Home.jsx` component, since this is what we want on the Home page
-- - Make a new folder for pages, update import paths
+  - Make a new folder for pages, update import paths
+
 - Now `App.jsx` will be concerned with handling routing
 
 ```js
 import Home from './pages/Home';
 
 function App() {
-  return (
-    <>
-      <Home />
-    </>
-  );
+	return (
+		<>
+			<Home />
+		</>
+	);
 }
 
 export default App;
@@ -48,61 +48,66 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 
 ```js
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home />} />
-      </Routes>
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path='/' element={<Home />} />
+			</Routes>
+		</BrowserRouter>
+	);
 }
 ```
 
-### Let's move our DuckForm to the MyPond page for adding to localstorage
+### Let's replace `My Pond` with `Add to Pond`, and move our `DuckForm` to it's own page
 
-- Make a new MyPond.jsx page
-- Copy over all of `Home`
-- Replace duck state, with one based on local storage
+- Make a new `AddToPond.jsx` page
+  - Copy over all of `Home` and rename it
+  - Remove `DuckPond` component
 
 ```js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+
+import { getAllDucks } from '../data/ducks';
+import { DuckContext } from '../context/duckContext';
+import DuckProvider from '../context/DuckProvider';
 
 import Navbar from '../components/Navbar';
 import Header from '../components/Header';
-import DuckPond from '../components/DuckPond';
 import DuckForm from '../components/DuckForm';
 import Footer from '../components/Footer';
 
-const Home = () => {
-  const [myDucks, setMyDucks] = useState(JSON.parse(localStorage.getItem('myDucks')) || []);
-
-  return (
-    <div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
-      <Navbar />
-      <main className='flex-grow flex flex-col justify-between py-4'>
-        <DuckPond ducks={myDucks} />
-        <DuckForm setDucks={setMyDucks} />
-      </main>
-      <Footer />
-    </div>
-  );
+const AddToPond = () => {
+	return (
+		<DuckProvider>
+			<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
+				<Navbar />
+				<main className='flex-grow flex flex-col justify-between py-4'>
+					<Header />
+					<DuckForm />
+				</main>
+				<Footer />
+			</div>
+			<ToastContainer />
+		</DuckProvider>
+	);
 };
 
-export default Home;
+export default AddToPond;
 ```
 
 - import it, and render it in a new route
 
 ```js
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='mypond' element={<MyPond />} />
-      </Routes>
-    </BrowserRouter>
-  );
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path='/' element={<Home />} />
+				<Route path='add-to-pond' element={<AddToPond />} />
+			</Routes>
+		</BrowserRouter>
+	);
 }
 ```
 
@@ -114,37 +119,43 @@ function App() {
 - In our `Navbar` component, we can update the hrefs to match our paths
 
 ```html
-<li className="p-2 rounded-lg hover:bg-slate-600">
-  <a href="/">Home</a>
+<li>
+	<a href="/">Home</a>
 </li>
-<li className="p-2 rounded-lg hover:bg-slate-600">
-  <a href="/mypond">My Pond</a>
+<li>
+	<a href="/add-to-pond">Add to Pond</a>
 </li>
 ```
 
 - This shows us the right content, but if you notice, it's refreshing the page every time - NOT what we want!
 - To use client-side navigation, React Router has a Link component we can use instead
-- Now instead of href, it has a to property
+- Now instead of href, it has a `to` property
 
 ```js
-<li className='p-2 rounded-lg hover:bg-slate-600'>
-                    <Link to='/'>Home</Link>
-                </li>
-                <li className='p-2 rounded-lg hover:bg-slate-600'>
-                    <Link to='/mypond'>My Pond</Link>
-                </li>
+<nav className='navbar-start'>
+	<Link className='font-bold' to='/'>
+		The Duck Pond
+	</Link>
+</nav>
+// other stuff...
+<li>
+	<Link to='/'>Home</Link>
+</li>
+<li>
+	<Link to='/add-to-pond'>Add to Pond</Link>
+</li>
 ```
 
 - You can use this anywhere you previous used `a` elements
 - There is also `NavLink`, this is functionally EXACTLY the same as `Link`, but it applies the `active` class so you can style to show the page you are currently on
 
 ```js
-<li className='p-2 rounded-lg hover:bg-slate-600'>
-                    <NavLink to='/'>Home</NavLink>
-                </li>
-                <li className='p-2 rounded-lg hover:bg-slate-600'>
-                    <NavLink to='/mypond'>My Pond</NavLink>
-                </li>
+<li>
+	<NavLink className={showActive} to='/'>Home</NavLink>
+</li>
+<li>
+	<NavLink className={showActive} to='/add-to-pond'>Add to Pond</NavLink>
+</li>
 ```
 
 - We can pass a function to the `NavLink` `className` to add our DaisyUI active class
@@ -152,154 +163,13 @@ function App() {
 ```js
 const showActive = ({ isActive }) => (isActive ? 'menu-active' : '');
 
- <li>
-      <NavLink className={showActive} to='/'>
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className={showActive} to='/mypond'>
-              My Pond
-            </NavLink>
-          </li>
+<li>
+	<NavLink className={showActive} to='/'>Home</NavLink>
+</li>
+<li>
+	<NavLink className={showActive} to='/add-to-pond'>Add to Pond</NavLink>
+</li>
 ```
-
-## Nested Routes, Layout, and Outlet
-
-- If we do a side-by-side comparison of `Home.jsx` and `MyPond.jsx` we can see there's a lot of repetition. Basically everything outside of `<main>` is the same
-- React Router let's us nest routes to apply a layout.
-- So far, we've used self-closing `Route` components, we can also nest other Route components inside
-
-### Make a new MainLayout component
-
-- The things we want on all of our pages, like Navbar and Footer, will go in the MainLayout component
-
-```js
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-
-const MainLayout = () => {
-  return (
-    <div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
-      <Navbar />
-      <main className='flex-grow flex flex-col justify-between py-4'></main>
-      <Footer />
-    </div>
-  );
-};
-
-export default MainLayout;
-```
-
-- And remove those pieces from the individual pages
-
-```js
-import { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import DuckPond from '../components/DuckPond';
-
-import { getDucks } from '../data/ducks';
-
-const Home = () => {
-  const [ducks, setDucks] = useState([]);
-
-  useEffect(() => {
-    let ignore = false;
-    (async () => {
-      try {
-        const allDucks = await getDucks();
-        if (!ignore) {
-          setDucks(allDucks);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-
-    console.log('useEffect ran!');
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  return (
-    <>
-      <Header />
-      <DuckPond ducks={ducks} />
-    </>
-  );
-};
-
-export default Home;
-```
-
-```js
-import { useState } from 'react';
-
-import DuckPond from '../components/DuckPond';
-import DuckForm from '../components/DuckForm';
-
-const MyPond = () => {
-  const [myDucks, setMyDucks] = useState(JSON.parse(localStorage.getItem('myDucks')) || []);
-  return (
-    <>
-      <DuckPond ducks={myDucks} />
-      <DuckForm setDucks={setMyDucks} />
-    </>
-  );
-};
-
-export default MyPond;
-```
-
-- Back in App.jsx we import our layout, and nest our Route elements inside a parent Route
-- The parent element now has the MainLayout, with path="/"
-- We update our home page path to index, to indicate we want to use the exact same path that the parent Route has
-
-```js
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path='mypond' element={<MyPond />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
-}
-```
-
-- Now we have our layout, but what about the pages?
-
-### React Router has an Outlet component that acts kind of like a placeholder
-
-- We can import it, then render it in our layout
-
-```js
-import { Outlet } from 'react-router';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-
-const MainLayout = () => {
-  return (
-    <div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
-      <Navbar />
-      <main className='flex-grow flex flex-col justify-between py-4'>
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
-export default MainLayout;
-```
-
-- This only works for routes nested inside our Layout Route, it we move it outside, no more layout (demo this)
-- This outlet works as a placeholder, so on /, it renders `<Home/>` where Outlet is, when the path is 'mypond' it renders `<MyPond/>`
 
 ## Dynamic Routes
 
@@ -310,20 +180,20 @@ export default MainLayout;
 ```js
 import { duck } from '../data/ducks';
 const DuckPage = () => {
-  const { name, imgUrl, quote } = duck;
-  console.log(imgUrl);
-  return (
-    <div className='hero bg-base-100 min-h-screen'>
-      <div className='hero-content flex-col lg:flex-row'>
-        <img src={imgUrl} className='max-w-sm rounded-lg shadow-2xl' />
-        <div>
-          <h1 className='text-5xl font-bold'>{name}</h1>
-          <p className='py-6'>{quote}</p>
-          <button className='btn btn-primary'>Go back</button>
-        </div>
-      </div>
-    </div>
-  );
+	const { name, imgUrl, quote } = duck;
+	console.log(imgUrl);
+	return (
+		<div className='hero bg-base-100 min-h-screen'>
+			<div className='hero-content flex-col lg:flex-row'>
+				<img src={imgUrl} className='max-w-sm rounded-lg shadow-2xl' />
+				<div>
+					<h1 className='text-5xl font-bold'>{name}</h1>
+					<p className='py-6'>{quote}</p>
+					<button className='btn btn-primary'>Go back</button>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default DuckPage;
@@ -342,11 +212,11 @@ export default DuckPage;
 
 ```js
 {
-  ducks.map(duck => (
-    <Link key={duck._id} to={`ducks/${duck._id}`}>
-      <DuckCard {...duck} />
-    </Link>
-  ));
+	ducks.map((duck) => (
+		<Link key={duck._id} to={`ducks/${duck._id}`}>
+			<DuckCard {...duck} />
+		</Link>
+	));
 }
 ```
 
@@ -369,21 +239,21 @@ console.log('duckId: ', duckId);
 const { name, imgUrl, quote } = currDuck;
 
 useEffect(() => {
-  let ignore = false;
-  (async () => {
-    try {
-      const duckData = await getDuckById(duckId);
-      if (!ignore) {
-        setCurrDuck(duckData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  })();
+	let ignore = false;
+	(async () => {
+		try {
+			const duckData = await getDuckById(duckId);
+			if (!ignore) {
+				setCurrDuck(duckData);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	})();
 
-  return () => {
-    ignore = true;
-  };
+	return () => {
+		ignore = true;
+	};
 }, [duckId]);
 ```
 
@@ -400,7 +270,7 @@ useEffect(() => {
 const navigate = useNavigate();
 
 const handleGoBack = () => {
-  navigate(-1);
+	navigate(-1);
 };
 ```
 
@@ -415,12 +285,151 @@ const handleGoBack = () => {
 ```js
 const navigate = useNavigate();
 const handleSignIn = () => {
-  setSignedIn(prev => !prev);
-  setTimeout(() => {
-    navigate('/mypond');
-  }, 1000);
+	setSignedIn((prev) => !prev);
+	setTimeout(() => {
+		navigate('/mypond');
+	}, 1000);
 };
 ```
+
+## Nested Routes, Layout, and Outlet
+
+- If we do a side-by-side comparison of `Home.jsx` and `MyPond.jsx` we can see there's a lot of repetition. Basically everything outside of `<main>` is the same
+- React Router let's us nest routes to apply a layout.
+- So far, we've used self-closing `Route` components, we can also nest other Route components inside
+
+### Make a new MainLayout component
+
+- The things we want on all of our pages, like Navbar and Footer, will go in the MainLayout component
+
+```js
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
+const MainLayout = () => {
+	return (
+		<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
+			<Navbar />
+			<main className='flex-grow flex flex-col justify-between py-4'></main>
+			<Footer />
+		</div>
+	);
+};
+
+export default MainLayout;
+```
+
+- And remove those pieces from the individual pages
+
+```js
+import { useState, useEffect } from 'react';
+import Header from '../components/Header';
+import DuckPond from '../components/DuckPond';
+
+import { getDucks } from '../data/ducks';
+
+const Home = () => {
+	const [ducks, setDucks] = useState([]);
+
+	useEffect(() => {
+		let ignore = false;
+		(async () => {
+			try {
+				const allDucks = await getDucks();
+				if (!ignore) {
+					setDucks(allDucks);
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+
+		console.log('useEffect ran!');
+
+		return () => {
+			ignore = true;
+		};
+	}, []);
+
+	return (
+		<>
+			<Header />
+			<DuckPond ducks={ducks} />
+		</>
+	);
+};
+
+export default Home;
+```
+
+```js
+import { useState } from 'react';
+
+import DuckPond from '../components/DuckPond';
+import DuckForm from '../components/DuckForm';
+
+const MyPond = () => {
+	const [myDucks, setMyDucks] = useState(
+		JSON.parse(localStorage.getItem('myDucks')) || []
+	);
+	return (
+		<>
+			<DuckPond ducks={myDucks} />
+			<DuckForm setDucks={setMyDucks} />
+		</>
+	);
+};
+
+export default MyPond;
+```
+
+- Back in App.jsx we import our layout, and nest our Route elements inside a parent Route
+- The parent element now has the MainLayout, with path="/"
+- We update our home page path to index, to indicate we want to use the exact same path that the parent Route has
+
+```js
+function App() {
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path='/' element={<MainLayout />}>
+					<Route index element={<Home />} />
+					<Route path='mypond' element={<MyPond />} />
+				</Route>
+			</Routes>
+		</BrowserRouter>
+	);
+}
+```
+
+- Now we have our layout, but what about the pages?
+
+### React Router has an Outlet component that acts kind of like a placeholder
+
+- We can import it, then render it in our layout
+
+```js
+import { Outlet } from 'react-router';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
+const MainLayout = () => {
+	return (
+		<div className='bg-slate-600 text-gray-300 flex flex-col min-h-screen'>
+			<Navbar />
+			<main className='flex-grow flex flex-col justify-between py-4'>
+				<Outlet />
+			</main>
+			<Footer />
+		</div>
+	);
+};
+
+export default MainLayout;
+```
+
+- This only works for routes nested inside our Layout Route, it we move it outside, no more layout (demo this)
+- This outlet works as a placeholder, so on /, it renders `<Home/>` where Outlet is, when the path is 'mypond' it renders `<MyPond/>`
 
 ## Project Organization
 

@@ -1,21 +1,28 @@
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router';
 const Navbar = () => {
 	const [isSignedIn, setIsSignedIn] = useState(false);
 	const handleClick = () => setIsSignedIn((prev) => !prev);
+
+	const showActive = ({ isActive }) => (isActive ? 'menu-active' : '');
 	return (
 		<div className='navbar bg-slate-800'>
 			<nav className='navbar-start'>
-				<a className='font-bold' href='/'>
+				<Link className='font-bold' to='/'>
 					The Duck Pond
-				</a>
+				</Link>
 			</nav>
 			<nav className='navbar-end'>
 				<ul className='menu menu-horizontal items-baseline gap-2'>
 					<li>
-						<a href='index.html'>Home</a>
+						<NavLink className={showActive} to='/'>
+							Home
+						</NavLink>
 					</li>
 					<li>
-						<a href='src/myPond.html'>My Pond</a>
+						<NavLink className={showActive} to='/add-to-pond'>
+							Add to Pond
+						</NavLink>
 					</li>
 					<li>
 						{isSignedIn ? (

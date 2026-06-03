@@ -12,7 +12,7 @@
 
 - When `App` mounts (renders for the first time), we are setting our array of ducks in state, then rendering it.
 - Let's actually turn that into a network request
-- You can write the code inside the component, like the playground example, but we want to modularize (break up) our code
+- You can write the code inside the component, but we want to modularize (break up) our code
 
 ## Make a fetchAllDucks function and import it
 
